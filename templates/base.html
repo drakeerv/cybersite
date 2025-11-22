@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="{{ get_url(path='style.css') }}">
+
+    {% if config.generate_rss or config.generate_atom %}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path='rss.xml') }}">
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ get_url(path='atom.xml') }}">
+    {% endif %}
+
+    {% block head_extra %}
+    {% endblock head_extra %}
+</head>
+
+<body>
+    {# Global Site Header/Navigation #}
+    <header class="site-header">
+        <a href="{{ get_url(path='/') }}">
+            <h1>{{ config.title }}</h1>
+        </a>
+        <div class="nav-and-search">
+            <nav class="main-nav">
+                <ul>
+                    {# Use get_url for the final output path #}
+                    <li><a href="{{ get_url(path='about') }}">About</a></li>
+                    <li><a href="{{ get_url(path='wiki') }}">Wiki</a></li>
+                    <li><a href="{{ get_url(path='search') }}">Search</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-container">
+                <input type="search" id="wiki-search-input" placeholder="Search the Wiki..." aria-label="Search site content">
+                <ul id="search-results" class="search-results hidden">
+                    <!-- Dynamic search results appear here -->
+                </ul>
+            </div>
+            
+        </div>
+    </header>
+    <div class="container">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; {{ now() | date(format="%Y") }} {{ config.title }} | Powered by <a
+                href="https://www.getzola.org">Zola</a>.</p>
+    </footer>
+
+    {% block scripts %}
+    {# 1. Load Elasticlunr Library #}
+    <script src="{{ get_url(path='elasticlunr.min.js') }}"></script>
+    
+    {# 2. Load the Pre-built Search Index (This sets window.searchIndex) #}
+    <script src="{{ get_url(path='search_index.en.js') }}"></script>
+
+    {# 3. Load the Search Logic #}
+    <script src="{{ get_url(path='fast_search.js') }}"></script>
+    {% endblock scripts %}
+</body>
+</html>

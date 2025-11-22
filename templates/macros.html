@@ -1,0 +1,4 @@
+{% macro render_wiki_text(text) %}
+{% set base = get_url(path="wiki") ~ "/" %}
+{{ text | replace(from="wp:", to="https://en.wikipedia.org/wiki/") | replace(from="w:", to=base) | markdown | safe }}
+{% endmacro render_wiki_text %}

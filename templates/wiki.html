@@ -1,0 +1,102 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page.title }} | Wiki | {{ config.title }}
+{% endblock title %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ get_url(path='wiki.css') }}">
+    <meta name="description" content="{{ page.description }}">
+{% endblock head_extra %}
+
+{% block content %}
+
+{% set content_with_refs = page.content | regex_replace(pattern="\[(\d+)\]", rep='<a href="#ref-$1">[$1]</a>') %}
+{% set final_content = content_with_refs | replace(from="wikipedia:", to="https://en.wikipedia.org/wiki/") %}
+
+<div class="wiki-layout">
+    <article class="wiki-article">
+        
+        <header class="wiki-header">
+            <h1>
+                {{ page.title }}
+                {% if page.extra.wikipedia_article %}
+                <a href="https://en.wikipedia.org/wiki/{{ page.extra.wikipedia_article }}" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   title="Read the Wikipedia page for {{ page.title }}" 
+                   class="title-wiki-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+                {% endif %}
+            </h1>
+
+            {% if page.description %}
+                <p class="wiki-description">{{ page.description }}</p>
+            {% endif %}
+        </header>
+
+        <section class="main-content">
+            {{ final_content | safe }}
+        </section>
+        
+        {% if page.extra.references %}
+        <section class="wiki-references">
+            <h2>References</h2>
+            <ol>
+            {% for reference in page.extra.references %}
+                <li id="ref-{{ loop.index }}">
+                    <a href="{{ reference.url | replace(from='wikipedia:', to='https://en.wikipedia.org/wiki/') }}" target="_blank" rel="noopener noreferrer">
+                        {{ reference.text }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ol>
+        </section>
+        {% endif %}
+        
+    </article>
+
+    {% if page.extra.infobox %}
+    <aside class="wiki-infobox">
+        
+        {% set infobox_title = page.extra.name | default(value=page.title) %}
+        <h2>{{ infobox_title }}</h2>
+        
+        {% if page.extra.image %}
+        <div class="wiki-infobox-image">
+            <img src="{{ page.extra.image }}" alt="{{ page.title }} infobox image" style="max-width: 100%; height: auto; display: block;" />
+            
+            {% if page.extra.image_caption %}
+            <div class="wiki-infobox-caption" style="padding: 10px; font-size: 0.9em;">
+                {{ macros::render_wiki_text(text=page.extra.image_caption) }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <table>
+            <tbody>
+                {% for item in page.extra.infobox %}
+                <tr>
+                    <td class="infobox-key">
+                        {{ macros::render_wiki_text(text=item.key) }}
+                    </td>
+                    <td class="infobox-value">
+                        {{ macros::render_wiki_text(text=item.value) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </aside>
+    {% endif %}
+
+</div>
+
+{% endblock content %}

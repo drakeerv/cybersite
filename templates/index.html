@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ config.title }}
+{% endblock title %}
+
+{% block content %}
+<main class="homepage-content">
+    <header>
+        <h1>Welcome to {{ config.title }}</h1>
+        <p>We are a cyberpatriot team based out of the East Cooper Center of Advanced Studies.</p>
+    </header>
+
+    <section class="quick-links">
+        <h2>Start Exploring</h2>
+        <nav>
+            <ul class="link-list">
+                <li>
+                    <a href="{{ get_url(path='about') }}">
+                        <h3>📖 Learn About Us</h3>
+                        <p>Find out more about the team and what we do.</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ get_url(path='wiki') }}">
+                        <h3>📚 Access the Wiki</h3>
+                        <p>Go to our wiki of information we have put together.</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+
+    <section class="featured-content">
+    </section>
+</main>
+{% endblock content %}
