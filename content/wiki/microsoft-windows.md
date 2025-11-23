@@ -14,7 +14,7 @@ value = "[Microsoft](w:microsoft)"
 
 [[extra.infobox]]
 key = "Code Base"
-value = "[NT Kernel](w:nt_kernel)"
+value = "[NT Kernel](w:nt-kernel)"
 
 [[extra.infobox]]
 key = "Official Website"

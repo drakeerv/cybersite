@@ -1,4 +1,8 @@
-{% macro render_wiki_text(text) %}
+{% macro make_links(text) %}
 {% set base = get_url(path="wiki") ~ "/" %}
-{{ text | replace(from="wp:", to="https://en.wikipedia.org/wiki/") | replace(from="w:", to=base) | markdown | safe }}
+{{ text | replace(from="wp:", to="https://en.wikipedia.org/wiki/") | replace(from="w:", to=base) }}
+{% endmacro make_links %}
+
+{% macro render_wiki_text(text) %}
+{{ self::make_links(text=text) | markdown | safe }}
 {% endmacro render_wiki_text %}
